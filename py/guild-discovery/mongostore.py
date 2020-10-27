@@ -25,11 +25,19 @@ def createGuild(jsonDecoded):
     if ('Race' in jsonDecoded):
         guild.race = jsonDecoded['Race']
     if ('Members' in jsonDecoded):
-        guild.members = jsonDecoded['Members']
+        guild.members = int(jsonDecoded['Members'].replace(',', ''))
     if ('TotalPoints' in jsonDecoded):
-        guild.totalPoints = jsonDecoded['TotalPoints']
+        if (jsonDecoded['TotalPoints'] == "--"):
+            totalPoints = 0
+        else:
+            totalPoints = int(jsonDecoded['TotalPoints'].replace(',', ''))  
+        guild.totalPoints = totalPoints
     if ('AveragePoints' in jsonDecoded):
-        guild.avgPoints = jsonDecoded['AveragePoints']
+        if (jsonDecoded['AveragePoints'] == "--"):
+            averagePoints = 0
+        else:
+            averagePoints = int(jsonDecoded['AveragePoints'].replace(',', ''))
+        guild.avgPoints = averagePoints
     if ('Description' in jsonDecoded):
         guild.description = jsonDecoded['Description']
     if ('Lieutenants' in jsonDecoded):

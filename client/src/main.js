@@ -12,6 +12,11 @@ import { createLogger } from 'vue-logger-plugin'
 // make sure to set this synchronously immediately after loading Vue
 // Vue.config.devtools = true
 
-createApp(App).use(createLogger({
+const app = createApp(App)
+app.use(createLogger({
     // If you need options
-})).mount('#app')
+}))
+
+app.config.devtools = true
+
+app.mount('#app')
