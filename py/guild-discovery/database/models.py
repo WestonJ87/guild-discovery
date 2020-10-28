@@ -13,3 +13,4 @@ class Guilds(db.Document):
     description = db.StringField()
     lieutenants = db.ListField(db.StringField())
     guildMembers = db.ListField(db.StringField())
+    bannerDisplayTemplate = db.StringField()

@@ -3,6 +3,7 @@ from flask import jsonify
 
 from app import app
 import time
+import scraper
 
 from database.models import Guilds
 
@@ -25,3 +26,8 @@ def getIndex():
 @cross_origin()
 def getGuilds():
     return jsonify(data.allGuilds), 200
+
+@app.route('/guilds/<id>')
+@cross_origin()
+def getDetailedGuildPage(id):
+    return jsonify(scraper.getGuildPage(id), 200)

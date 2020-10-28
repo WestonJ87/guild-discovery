@@ -22,6 +22,10 @@ def checkForUpdateGuilds(numberOfIDs, iterator):
 
     return allGuilds
 
+def getGuildPage(id):
+    fracturedGuildsURL = 'https://fracturedmmo.com/guild-profile/id/{}'
+    return fetchAndCollect(fracturedGuildsURL.format(id), id);
+
 def fetchAndCollect(url, id):
     return collectGuildPageData(requests.get(url).text, id)
 
@@ -33,6 +37,7 @@ def collectGuildPageData(pageopen, id):
 
     # find a predictible section to scope our search to
     profileSection = soup.find(id="profile_displayer")
+    
     sectionHeaders = profileSection.findAll(['h1', 'h2', 'h3', 'h4'])
 
     # if this value equals guildName we have encountered re-direction to default 'Create Guild' page
@@ -92,6 +97,11 @@ def collectGuildPageData(pageopen, id):
         value = re.sub(r"\s+", "", smallDetailsText[i].split(':')[1])
         data[key] = value
     # print("TAG :: ",data['Tag'], " || RACE :: ",data['Race'], " || MASTER :: ",data['Master'])
+
+    # Get the entire HTML for the banner_display div -- we'll clean it up later
+    bannerDisplay = soup.find(id="banner_displayer")
+    data['bannerDisplayTemplate'] = str(bannerDisplay.div)
+    # pprint(bannerDisplay.div)
 
     json_data = json.dumps(data)
     # pprint(json.loads(json_data)['AveragePoints'])

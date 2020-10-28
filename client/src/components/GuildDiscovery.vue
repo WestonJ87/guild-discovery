@@ -1,217 +1,123 @@
 <template>
   <div>
-    <div id="filter-bar" class="level-right">
-      <div class="field" style="margin-top:10px;">
-        <label class="label is-small">By Race :</label>
-        <div class="control">
-          <div class="select is-small">
-            <select @change="onSelectRaceFilter($event)">
-                <option selected>Race/Planet</option>
-                <option>Human/Syndesia</option>
-                <option>Beastmen/Arboreus</option>
-                <option>Demon/Tartaros</option>
-            </select>
-          </div>
-        </div>
-      </div>  
-      <div class="field" style="margin-top:10px;">
-        <label class="label is-small">By Participants :</label>
-        <p class="control">
-          <span> from </span> 
-            <input @input="onMemberRangeFilter($event)" id="member-min" class="input small-input" type="text" placeholder="MIN">
-          <span> to </span> 
-            <input @input="onMemberRangeFilter($event)" id="member-max" class="input medium-input" type="text" placeholder="MAX">
-          <span> members. </span>
-        </p>
-      </div>
-      <div class="field is-grouped is-grouped-centered">
-        <p class="control">
-            <label class="label is-small">Total Points:</label>
-            <input @input="onTotalPointsFilter($event)" id="total-points" class="input medium-input" type="text" placeholder="MIN">
-        </p>
-        <p class="control">
-          <label class="label is-small">Average Points:</label>
-          <input @input="onAveragePointsFilter($event)" id="average-points" class="input medium-input" type="text" placeholder="MIN">
-        </p>
-      </div>
+    <GuildFilterPanel
+      @filter-by-race="filterByRace"
+      @filter-by-participants="filterByMembers"
+      @filter-by-points="filterByPoints"
+      @reset-filters="resetFilters"
+      :isDetailsPanelVisible="isDetailsPanelVisible">
+    </GuildFilterPanel>
+    <div id="grid-workspace">
+      <GuildsTable
+        ref="GuildsTable"
+        @hit-server="hitServer"
+        @launch-guild-details="showDetailsForGuild"
+        :allGuildsData="allGuildsData"
+        :raceFilterObject="raceFilterObject"
+        :membersFilterObject="membersFilterObject"
+        :pointsFilterObject="pointsFilterObject"
+        :isDetailsPanelVisible="isDetailsPanelVisible">
+      </GuildsTable>
+      <GuildDetailsPanel v-if="isDetailsPanelVisible"
+        @close-details-panel="closeDetailPanel"
+        :selectedGuild="selectedGuild">
+      </GuildDetailsPanel>
     </div>
-    <AgGridVue style="width:100%; height: 750px;" class="ag-theme-alpine"
-        :columnDefs="columnDefs"
-        :rowData="rowData"
-        :modules="modules"
-        :gridOptions="gridOptions"
-        @grid-ready="onReady">
-    </AgGridVue>
   </div>
 </template>
 
 <script>
+import GuildFilterPanel from './GuildFilterPanel'
+import GuildDetailsPanel from './GuildDetailsPanel'
+import GuildsTable from './GuildsTable'
 
 import axios from 'axios';
 
-import { AgGridVue } from '@ag-grid-community/vue3'
-
-import { AllCommunityModules } from '@ag-grid-community/all-modules';
-
-import _ from 'lodash'
-
 export default {
   name: 'GuildDiscovery',
-  props: {},
   data () {
     return {
       name: 'GuildDiscovery',
-      columnDefs: null,
-      rowData: null,
-      modules: AllCommunityModules
+      isDetailsPanelVisible: false,
+      allGuildsData: null,
+      raceFilterObject: null,
+      membersFilterObject: null,
+      pointsFilterObject: null,
+      selectedGuild: null,
+      membersMinimum: null,
+      membersMaximum: null
     }
   },
   components: {
-    AgGridVue
-  },
-  beforeMount() {
-    this.gridOptions = {};
-    this.createColumnDefs();
-    this.createRowData();
+    GuildFilterPanel,
+    GuildDetailsPanel,
+    GuildsTable
   },
   mounted: function () {
     this.$log.info("CONTEXT : ", this.name + " : MOUNTED");
   },
   methods: {
     hitServer: function (path) {
-      axios.get(`http://127.0.0.1:5000` + path)
+      axios.get(`http://127.0.0.1:5000/` + path)
         .then((response) => {
-          this.rowData = response.data;
+          this.allGuildsData = response.data;
         })
         .catch((error) => {
           this.$log.error("CONTEXT : " + this.name + " : ERROR :: " + error);
           return error;
         })
     },
-    onReady() {
-      this.gridOptions.api.sizeColumnsToFit();
+    showDetailsForGuild: function (id) {
+      console.log("SHOW DETAILS FOR GUILD :: ", id)
+      this.isDetailsPanelVisible = true;
+      this.selectedGuild = this.allGuildsData.find(guild => guild.guildID == id) // Get Guild by ID and show details panel constructed from info.
     },
-    clearFilters() {
-      this.gridOptions.api.setFilterModel(null);
+    resetFilters: function () {
+      this.$refs.GuildsTable.clearFilters();
     },
-    onSelectRaceFilter: _.debounce((event) => {
-      console.log(event.target.value)
-    }, 
-    100),
-    onMemberRangeFilter: _.debounce((event) => {
-      console.log(event.target.value)
-      var hardcodedFilter = {
-        guildID: {
-          type: 'greaterThan',
-          filter: event.target.value
+    filterByRace: function (race) {
+      this.raceFilterObject = {
+        filterType: 'text',
+        type: 'Equals',
+        filter: race
+      }
+    },
+    filterByMembers: function (typeAndAmount) {
+      // First set current values for min and max # of members for guild.
+      if (typeAndAmount.type == 'min') {
+        this.membersMinimum = typeAndAmount.value
+      } else if (typeAndAmount.type == 'max') {
+        this.membersMaximum = typeAndAmount.value
+      }
+
+      if (this.membersMinimum && this.membersMaximum) {
+        this.membersFilterObject = {
+          filterType: 'number',
+          type: 'inRange',
+          filter: this.membersMinimum,
+          filterTo: this.membersMaximum
+        }
+      } else {
+        this.membersFilterObject = {
+          filterType: 'number',
+          type: typeAndAmount.type == 'max' ? 'lessThan' : 'greaterThan',
+          filter: typeAndAmount.type == 'max' ? this.membersMaximum : this.membersMinimum
         }
       }
-      this.gridOptions.api.setFilterModel(hardcodedFilter)
-    }, 
-    1000),
-    onTotalPointsFilter: _.debounce((event) => {
-      console.log(event.target.value)
-    }, 
-    1000),
-    onAveragePointsFilter: _.debounce((event) => {
-      console.log(event.target.value)
-    }, 
-    1000),
-    numberFormatter(params) {
-      if (params.value == 0) {
-        return "--"
-      } else if (typeof params.value !== "number") {
-        return parseInt(params.value.replace(/,/g, ''));
-      } else {
-        return params.value
-      }   
     },
-    numberSort(num1, num2) {
-      return num1 - num2;
-    },
-    createRowData() {
-      // call flaskapp/guilds to get guilds stored in mongo
-      this.hitServer('/guilds');
-    },
-    createColumnDefs() {
-      this.columnDefs = [
-        { 
-          headerName: 'ID', 
-          field: 'guildID',
-          width: 110, 
-          sortable: true, 
-          type: 'numericColumn',
-          filter: 'agNumberColumnFilter',
-          valueFormatter: this.numberFormatter,
-          comparator: this.numberSort
-        },
-        { 
-          headerName: 'Guild Name', 
-          field: 'name', 
-          sortable: true
-        },
-        { 
-          headerName: 'Master', 
-          field: 'master', 
-          sortable: true
-        },
-        { 
-          headerName: 'Tag', 
-          field: 'tag',
-          width: 90,  
-          sortable: true
-        },
-        { 
-          headerName: 'Race', 
-          field: 'race',
-          filter: 'agTextColumnFilter',
-          width: 120, 
-          sortable: true
-        },
-        { 
-          headerName: 'Members', 
-          field: 'members',
-          width: 150,  
-          sortable: true, 
-          type: 'numericColumn',
-          filter: 'agNumberColumnFilter',
-          valueFormatter: this.numberFormatter,
-          comparator: this.numberSort
-        },
-        { 
-          headerName: 'Total Points', 
-          field: 'totalPoints', 
-          sortable: true, 
-          type: 'numericColumn',
-          filter: 'agNumberColumnFilter',
-          valueFormatter: this.numberFormatter,
-          comparator: this.numberSort 
-        },
-        { 
-          headerName: 'Average Points', 
-          field: 'avgPoints', 
-          sortable: true, 
-          type: 'numericColumn',
-          filter: 'agNumberColumnFilter',
-          valueFormatter: this.numberFormatter,
-          comparator: this.numberSort
-        },
-        { 
-          headerName: 'Description', 
-          field: 'description', 
-          sortable: true
-        },
-        { 
-          headerName: 'Lieutenants', 
-          field: 'lieutenants', 
-          sortable: true
-        },
-        { 
-          headerName: 'Guild Members', 
-          field: 'guildMembers', 
-          sortable: true
+    filterByPoints: function (typeAndAmount) {
+      this.pointsFilterObject = {
+        type: typeAndAmount.type,
+        filterObject: {
+          filterType: 'number',
+          type: 'greaterThan',
+          filter: typeAndAmount.value
         }
-      ];
+      }
+    },
+    closeDetailPanel: function () {
+      this.isDetailsPanelVisible = false;
+      this.$refs.GuildsTable.sizeToFit();
     }
   }
 }
@@ -219,20 +125,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-.small-input {
-  width: 60px;
-  height: 25px;
-}
-
-.medium-input {
-  width: 100px;
-  height: 25px;
-}
-
-.thin-select {
-  height: 35px;
-}
-.field {
-  padding: 10px;
+#grid-workspace {
+  display: flex;
+  width: 100%;
 }
 </style>

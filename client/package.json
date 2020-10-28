@@ -15,6 +15,7 @@
     "@ag-grid-community/infinite-row-model": "^24.1.0",
     "@ag-grid-community/vue": "^24.1.1",
     "@ag-grid-community/vue3": "^24.1.1",
+    "@fortawesome/fontawesome-free": "^5.15.1",
     "axios": "^0.20.0",
     "core-js": "^3.6.5",
     "lodash": "^4.17.20",

@@ -42,8 +42,8 @@ def createGuild(jsonDecoded):
         guild.description = jsonDecoded['Description']
     if ('Lieutenants' in jsonDecoded):
         guild.lieutenants = jsonDecoded['Lieutenants']
+    if ('bannerDisplayTemplate' in jsonDecoded):
+        guild.bannerDisplayTemplate = jsonDecoded['bannerDisplayTemplate']
     
     return guild
-    # print()
-    # pprint(guild.to_json())
 
