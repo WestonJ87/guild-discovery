@@ -4,6 +4,8 @@
       @filter-by-race="filterByRace"
       @filter-by-participants="filterByMembers"
       @filter-by-points="filterByPoints"
+      @show-hide-single-member="showHideSingleMemberGuilds"
+      @show-hide-guilds-wo-desc="showHideGuildsWithoutDescription"
       @reset-filters="resetFilters"
       :isDetailsPanelVisible="isDetailsPanelVisible">
     </GuildFilterPanel>
@@ -16,6 +18,7 @@
         :raceFilterObject="raceFilterObject"
         :membersFilterObject="membersFilterObject"
         :pointsFilterObject="pointsFilterObject"
+        :descriptionFilterObject="descriptionFilterObject"
         :isDetailsPanelVisible="isDetailsPanelVisible">
       </GuildsTable>
       <GuildDetailsPanel v-if="isDetailsPanelVisible"
@@ -43,6 +46,7 @@ export default {
       raceFilterObject: null,
       membersFilterObject: null,
       pointsFilterObject: null,
+      descriptionFilterObject: null,
       selectedGuild: null,
       membersMinimum: null,
       membersMaximum: null
@@ -113,6 +117,23 @@ export default {
           type: 'greaterThan',
           filter: typeAndAmount.value
         }
+      }
+    },
+    showHideSingleMemberGuilds: function (showHide) {
+      if (showHide) {
+        this.filterByMembers({ type: 'min', value: 1 });
+      } else {
+        // reset
+      }
+    },
+    showHideGuildsWithoutDescription: function (showHide) {
+       if (showHide) {
+        this.descriptionFilterObject = {
+          filterType: 'text',
+          type: 'blanks'
+        }
+      } else {
+        // unhide
       }
     },
     closeDetailPanel: function () {

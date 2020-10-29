@@ -52,14 +52,14 @@ def collectGuildPageData(pageopen, id):
     for header in UniqueHeaders:
 
         if header.text == 'LIEUTENANTS':
-            valueContents = header.parent.findAll('p')
+            valueContents = header.findNext('div').findAll('p')
             textValuesFromContents = []
             for content in valueContents:
                 textValuesFromContents.append(content.text)
             key = header.text.title()
             value = textValuesFromContents
             data[key] = textValuesFromContents
-            # print("KEY :: ", key, " || VALUE :: ", value)
+            # print(data['Name'], "KEY :: ", key, " || VALUE :: ", value)
 
         if header.text == 'DESCRIPTION':
             descriptionText = header.parent.p.text
@@ -69,14 +69,14 @@ def collectGuildPageData(pageopen, id):
             # print("KEY :: ", key, " || VALUE :: ", value)
 
         if header.text == 'GUILD MEMBERS':
-            valueContents = header.parent.findAll('p')
+            valueContents = header.findNext('div').findAll('p')
             textValuesFromContents = []
             for content in valueContents:
                 textValuesFromContents.append(content.text)
             key = ''.join(x for x in header.text.title() if not x.isspace())
             value = textValuesFromContents
             data[key] = value
-            # print("KEY :: ", key, " || VALUE :: ", value)
+            # print(data['Name'], "KEY :: ", key, " || VALUE :: ", value)
 
         if header.text == 'GUILD MASTER':
             key = ''.join(x for x in header.text.title() if not x.isspace())

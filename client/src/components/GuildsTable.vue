@@ -26,7 +26,7 @@ export default {
       modules: AllCommunityModules
     }
   },
-  props: [ 'isDetailsPanelVisible', 'allGuildsData', 'raceFilterObject', 'membersFilterObject', 'pointsFilterObject' ],
+  props: [ 'isDetailsPanelVisible', 'allGuildsData', 'raceFilterObject', 'membersFilterObject', 'pointsFilterObject', 'descriptionFilterObject' ],
   components: {
     AgGridVue
   },
@@ -50,6 +50,9 @@ export default {
     },
     pointsFilterObject: function(newVal) {
       this.updateFilter(newVal.type == 'total' ? 'totalPoints' : 'avgPoints', newVal.filterObject);
+    },
+    descriptionFilterObject: function(newVal) {
+      this.updateFilter('description', newVal);
     }
   },
   methods: {
@@ -76,6 +79,9 @@ export default {
     },
     clearFilters() {
       this.gridOptions.api.setFilterModel(null);
+    },
+    memberCellRenderer(params) {
+      return `<a href="https://fracturedmmo.com/hero-profile/user/${params.value}/" target="_blank"> ${params.value} </a>`
     },
     guildCellRenderer(params) {
       return `<p style="width:100%;"><i style="float:left; margin-top:15px;" class="fas fa-info-circle guild-info"></i>${params.value}</p>`
@@ -117,7 +123,8 @@ export default {
         },
         { 
           headerName: 'Master', 
-          field: 'master', 
+          field: 'master',
+          cellRenderer: this.memberCellRenderer, 
           sortable: true
         },
         { 

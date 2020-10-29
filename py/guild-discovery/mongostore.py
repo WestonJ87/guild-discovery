@@ -10,6 +10,7 @@ def updateOrCreateGuild(guildJSON):
     result = Guilds.objects(guildID=jsonDecoded['Id'])
     if len(result) == 0:
         newGuild = createGuild(jsonDecoded)
+        pprint(newGuild)
         newGuild.save()
     else:
         pass
@@ -42,6 +43,8 @@ def createGuild(jsonDecoded):
         guild.description = jsonDecoded['Description']
     if ('Lieutenants' in jsonDecoded):
         guild.lieutenants = jsonDecoded['Lieutenants']
+    if ('GuildMembers' in jsonDecoded):
+        guild.guildMembers = jsonDecoded['GuildMembers']
     if ('bannerDisplayTemplate' in jsonDecoded):
         guild.bannerDisplayTemplate = jsonDecoded['bannerDisplayTemplate']
     

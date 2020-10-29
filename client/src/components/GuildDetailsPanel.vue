@@ -6,65 +6,66 @@
         <button @click="closeDetails" class="delete"></button>
       </div>
       <div class="message-body">
-        <div id="guild_details">
+        <div id="banner_displayer" v-html="selectedGuild.bannerDisplayTemplate" style="text-align: center;"></div>
+        <div class="container details-columns">
+          <div class="container column">
+            <span>
+              <label class="label is-small">Tag :</label>
+              <p class="value">{{ selectedGuild.tag }}</p>
+            </span>
+            <span>
+              <label class="label is-small">Race :</label>
+              <p class="value">{{ selectedGuild.race }}</p>
+            </span>
+            <span>
+              <label class="label is-small">Master :</label>
+              <p class="value">{{ selectedGuild.master }}</p>
+            </span>
+            <span>
+              <label class="label is-small">Members :</label>
+              <p class="value">{{ selectedGuild.members }}</p>
+            </span>
+          </div>
+          <div class="container column">
+            <h5 class="foundation-scores-header">FOUNDATION SCORES</h5>
+            <span>
+              <label class="label is-small">Total Points :</label>
+              <p class="value">{{ selectedGuild.totalPoints }}</p>
+            </span>
+            <span>
+              <label class="label is-small">Average Points :</label>
+              <p class="value">{{ selectedGuild.avgPoints }}</p>
+            </span>
+          </div>
+        </div>
+        <div v-if="selectedGuild.description" class="container">
           <section class="section">
             <div class="container">
-              <span>
-                <label class="label is-small">name :</label>
-                <h5 class="title">{{ selectedGuild.name }}</h5>
-              </span>
               <label class="label is-small">description :</label>
               <h6 class="subtitle description">{{ selectedGuild.description }}</h6>
-              <div class="container details-columns">
-                <div class="container column">
-                  <span>
-                    <label class="label is-small">Tag :</label>
-                    <p class="value">{{ selectedGuild.tag }}</p>
-                  </span>
-                  <span>
-                    <label class="label is-small">Race :</label>
-                    <p class="value">{{ selectedGuild.race }}</p>
-                  </span>
-                  <span>
-                    <label class="label is-small">Master :</label>
-                    <p class="value">{{ selectedGuild.master }}</p>
-                  </span>
-                  <span>
-                    <label class="label is-small">Members :</label>
-                    <p class="value">{{ selectedGuild.members }}</p>
-                  </span>
-                </div>
-                <div class="container column">
-                  <h5 class="foundation-scores-header">FOUNDATION SCORES</h5>
-                  <span>
-                    <label class="label is-small">Total Points :</label>
-                    <p class="value">{{ selectedGuild.totalPoints }}</p>
-                  </span>
-                  <span>
-                    <label class="label is-small">Average Points :</label>
-                    <p class="value">{{ selectedGuild.avgPoints }}</p>
-                  </span>
-                </div>
-              </div>
             </div>
           </section>
         </div>
-        <div id="banner_displayer" v-html="selectedGuild.bannerDisplayTemplate" style="text-align: center;">
-        </div>
       </div>
     </article>
-    <article class="message lieutenants">
-      <div class="message-body">
-        <div v-for="(member, index) in selectedGuild.lieutenants" v-bind:key="index">
-          <p>{{ member }}</p>
-        </div>
+    <article class="message is-small lieutenants">
+      <div class="message-header">
+        <h3> Lieutenants </h3>
+      </div>
+      <div class="message-body memberslist tags is-centered">
+        <span class="tag" v-for="(member, index) in selectedGuild.lieutenants" v-bind:key="index">
+          {{ member }}
+        </span>
       </div>
     </article>
-    <article class="message guild-members">
-      <div class="message-body">
-        <div v-for="(member, index) in selectedGuild.guildMembers" v-bind:key="index">
-          <p>{{ member }}</p>
-        </div>
+    <article class="message is-small guild-members">
+      <div class="message-header">
+        <h3> Guild Members </h3>
+      </div>
+      <div class="message-body memberslist tags is-centered">
+        <span class="tag" v-for="(member, index) in selectedGuild.guildMembers" v-bind:key="index">
+          {{ member }}
+        </span>
       </div>
     </article>
   </div>
@@ -96,22 +97,34 @@ export default {
   padding: 10px;
 }
 
+.section {
+  margin: -50px;
+  margin-left: -25px;
+  margin-right: -100px;
+}
+
+.description {
+  margin-right: -70px;
+}
+
 .message {
   background-color: #F5F5F5;
 }
 
 .message-body {
   display: flex;
+  flex-direction: column;
   width: 100%;
 }
 
-#guild_details {
-  width: 90%;
-  margin-top: -40px;
-  margin-left: -30px;
-  margin-bottom: -40px;
-  margin-right: -60px;
-  padding: -50px;
+.memberslist {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.memberslist > span {
+  margin: -1px;
 }
 
 .foundation-scores-header {
@@ -126,6 +139,9 @@ export default {
 
 .details-columns {
   display: flex;
+  width: 100%;
+  margin-left: -5px;
+  margin-right: -55px;
 }
 
 .column {
@@ -150,7 +166,7 @@ span > h5,h6,p {
 }
 
 #banner_displayer {
-  width: 30%;
+  width: 60%;
   margin-left: 60px;
   transform: scale(0.9);
 }

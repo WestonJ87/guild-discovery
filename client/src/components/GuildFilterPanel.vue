@@ -4,13 +4,13 @@
         <div class="field" style="margin-bottom: -25px;">
           <label style="margin-top:-5px;" class="checkbox is-size-7 is-pulled-left">
             hide single member guilds :   
-            <input type="checkbox">
+            <input v-model="hideSingleMemberGuilds" type="checkbox">
           </label>
         </div>
         <div class="field" style="margin-bottom: -25px;">
-          <label style="margin-top:-5px;" class="checkbox is-size-7 is-pulled-left">
+          <label disabled style="margin-top:-5px;" class="checkbox is-size-7 is-pulled-left">
             hide no description guilds :   
-            <input type="checkbox">
+            <input disabled v-model="hideGuildsWithoutDescription" type="checkbox">
           </label>
         </div>
       </div>
@@ -70,6 +70,8 @@ export default {
       maximumMembers: "",
       minimumTotalPoints: "",
       minimumAveragePoints: "",
+      hideSingleMemberGuilds: "",
+      hideGuildsWithoutDescription: ""
     }
   },
   props: [ 'isDetailsPanelVisible' ],
@@ -91,7 +93,15 @@ export default {
     }, 500),
     minimumAveragePoints: _.debounce(function(newVal){
       this.onPointsFilter('average', newVal);
-    }, 500)
+    }, 500),
+    hideSingleMemberGuilds: function () {
+      this.minimumMembers = "";
+      this.maximumMembers = "";
+      this.$emit('show-hide-single-member', this.hideSingleMemberGuilds);
+    },
+    hideGuildsWithoutDescription: function () {
+      this.$emit('show-hide-guilds-wo-desc', this.hideGuildsWithoutDescription);
+    }
   },
   methods: {
       resetFilters: function () {
@@ -101,6 +111,8 @@ export default {
         this.maximumMembers = "";
         this.minimumTotalPoints = "";
         this.minimumAveragePoints = "";
+        this.hideSingleMemberGuilds = false;
+        this.hideGuildsWithoutDescription = false;
       },
       onSelectRaceFilter: function () { 
         this.$emit('filter-by-race', this.race); 
