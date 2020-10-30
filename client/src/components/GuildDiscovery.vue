@@ -1,5 +1,8 @@
 <template>
   <div>
+    <figure class="image is-text-centered">
+      <img id="app-logo" src="@/images/fractured-logo.png"/>
+    </figure>
     <GuildFilterPanel
       @filter-by-race="filterByRace"
       @filter-by-participants="filterByMembers"
@@ -146,8 +149,18 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+#app-logo {
+  margin-top: -50px;
+  width: 550px;
+}
+
 #grid-workspace {
   display: flex;
   width: 100%;
+}
+
+.is-text-centered {
+  margin-left: auto;
+  margin-right: auto;
 }
 </style>

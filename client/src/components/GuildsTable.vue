@@ -106,10 +106,10 @@ export default {
     createColumnDefs() {
       this.columnDefs = [
         { 
-          headerName: 'ID', 
+          headerName: 'ID',
+          width: 120,
           field: 'guildID',
           sortable: true,
-          width: 100,
           type: 'numericColumn',
           filter: 'agNumberColumnFilter',
           cellRenderer: this.guildCellRenderer,
@@ -130,20 +130,20 @@ export default {
         { 
           headerName: 'Tag', 
           field: 'tag',
-          width: 90,  
+          width: 120,
           sortable: true
         },
         { 
           headerName: 'Race', 
           field: 'race',
+          width: 125,
           filter: 'agTextColumnFilter',
-          width: 120, 
           sortable: true
         },
         { 
-          headerName: 'Members', 
-          field: 'members',
-          width: 90,  
+          headerName: 'Members',
+          width: 150,
+          field: 'members',  
           sortable: true, 
           type: 'numericColumn',
           filter: 'agNumberColumnFilter',
@@ -151,8 +151,7 @@ export default {
           comparator: this.numberSort
         },
         { 
-          headerName: 'Total Points',
-          width: 100, 
+          headerName: 'Total Points', 
           field: 'totalPoints', 
           sortable: true, 
           type: 'numericColumn',
@@ -161,8 +160,7 @@ export default {
           comparator: this.numberSort 
         },
         { 
-          headerName: 'Average Points',
-          width: 120, 
+          headerName: 'Average Points', 
           field: 'avgPoints', 
           sortable: true, 
           type: 'numericColumn',
