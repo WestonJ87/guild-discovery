@@ -98,6 +98,8 @@ export default {
 		.percentage {
 			height: $percentage-font-size;
 			width: $percentage-text-width * 1.4;
+			margin: -5px;
+			margin-top: 5px;
 			overflow: hidden;
 
 			position: absolute;

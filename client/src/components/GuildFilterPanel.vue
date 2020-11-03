@@ -219,7 +219,7 @@ export default {
 }
 
 #user-survey-form-btn {
-  margin-left: 15px;
+  margin-left: 30px;
   margin-bottom: -40px;
 }
 

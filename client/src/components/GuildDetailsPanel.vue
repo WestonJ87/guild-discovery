@@ -167,7 +167,7 @@ span > h5,h6,p {
 
 #banner_displayer {
   width: 60%;
-  margin-left: 60px;
+  margin-left: 100px;
   transform: scale(0.9);
 }
 
@@ -177,9 +177,11 @@ span > h5,h6,p {
 
 /deep/ .guild-banner-color {
     position: absolute;
+    /* clip:rect(10, 0, 10px, 10px); */
     width: 100%;
     padding-top: 150%;
     background-image: url(https://assets.fracturedmmo.com/images/guild_banner_colors.jpg);
+    box-shadow: 25px 25px 50px 0 white inset, -25px -25px 50px 25px white inset; 
     background-size: cover;
 }
 
