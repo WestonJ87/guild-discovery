@@ -11,10 +11,13 @@
 </template>
 
 <script>
+/* eslint-disable */
 
 import { AgGridVue } from '@ag-grid-community/vue3'
 
 import { AllCommunityModules } from '@ag-grid-community/all-modules';
+
+import CorrelationProgressColumn from './CorrelationProgressColumn'
 
 export default {
   name: 'GuildsTable',
@@ -26,13 +29,14 @@ export default {
       modules: AllCommunityModules
     }
   },
-  props: [ 'isDetailsPanelVisible', 'allGuildsData', 'raceFilterObject', 'membersFilterObject', 'pointsFilterObject', 'descriptionFilterObject' ],
+  props: [ 'isDetailsPanelVisible', 'allGuildsData', 'userCorrelationMap', 'showUserCorrelation', 'raceFilterObject', 'membersFilterObject', 'pointsFilterObject', 'descriptionFilterObject' ],
   components: {
-    AgGridVue
+    AgGridVue,
+    CorrelationProgressColumn
   },
   beforeMount() {
     this.gridOptions = {};
-    this.createColumnDefs();
+    this.columnDefs = this.createColumnDefs();
     this.createRowData();
   },
   mounted: function () {
@@ -41,6 +45,10 @@ export default {
   watch: { 
     allGuildsData: function(newVal) {
       this.rowData = newVal;
+    },
+    userCorrelationMap: function(newVal) {
+      this.$emit('show-user-correlation', true);
+      this.updateColumnDefs(this.showUserCorrelation);
     },
     raceFilterObject: function(newVal) {
       this.updateFilter('race', newVal);
@@ -53,6 +61,15 @@ export default {
     },
     descriptionFilterObject: function(newVal) {
       this.updateFilter('description', newVal);
+    },
+    showUserCorrelation: function(shouldShow) {
+      if (shouldShow) {
+        this.gridOptions.rowHeight = 120;
+        this.gridOptions.api.resetRowHeights();
+      } else {
+        this.gridOptions.rowHeight = 60;
+        this.gridOptions.api.resetRowHeights();
+      }
     }
   },
   methods: {
@@ -103,8 +120,23 @@ export default {
       // emit instead
       this.$emit('hit-server', 'guilds');
     },
+    updateColumnDefs(showUserCorrelation) {
+      let columnDefs = this.createColumnDefs();
+
+      if (showUserCorrelation) {
+        columnDefs.push({
+          headerName: 'Compatibility %',
+          field: 'correlationForUser',
+          sortable: true,
+          cellRendererFramework: 'CorrelationProgressColumn',
+        })
+      }
+
+      this.columnDefs = columnDefs;
+      this.gridOptions.api.refreshCells();
+    },
     createColumnDefs() {
-      this.columnDefs = [
+      return [
         { 
           headerName: 'ID',
           width: 120,
@@ -181,6 +213,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  // Math.floor(Math.random() * 100) + 1
   .minimized {
     width: 70%;
   }

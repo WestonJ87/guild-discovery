@@ -1,15 +1,17 @@
 <template>
   <div>
-    <figure class="image is-text-centered">
-      <img id="app-logo" src="@/images/fractured-logo.png"/>
-    </figure>
     <GuildFilterPanel
       @filter-by-race="filterByRace"
       @filter-by-participants="filterByMembers"
       @filter-by-points="filterByPoints"
+      @user-correlation-survey-complete="storeAndSubmitUserCorrelation"
+      @close-correlation-form="turnOffCorrelationForm"
+      @get-user-correlations="getCorrelationForUser"
       @show-hide-single-member="showHideSingleMemberGuilds"
       @show-hide-guilds-wo-desc="showHideGuildsWithoutDescription"
+      @hide-compatibility-scores="showHideCompatibilityScores"
       @reset-filters="resetFilters"
+      :showUserCorrelationForm="showUserCorrelationForm"
       :isDetailsPanelVisible="isDetailsPanelVisible">
     </GuildFilterPanel>
     <div id="grid-workspace">
@@ -17,7 +19,10 @@
         ref="GuildsTable"
         @hit-server="hitServer"
         @launch-guild-details="showDetailsForGuild"
+        @show-user-correlation="showHideCompatibilityScores"
         :allGuildsData="allGuildsData"
+        :userCorrelationMap="userCorrelationMap"
+        :showUserCorrelation="showUserCorrelation"
         :raceFilterObject="raceFilterObject"
         :membersFilterObject="membersFilterObject"
         :pointsFilterObject="pointsFilterObject"
@@ -38,6 +43,7 @@ import GuildDetailsPanel from './GuildDetailsPanel'
 import GuildsTable from './GuildsTable'
 
 import axios from 'axios';
+import _ from 'lodash'
 
 export default {
   name: 'GuildDiscovery',
@@ -52,7 +58,10 @@ export default {
       descriptionFilterObject: null,
       selectedGuild: null,
       membersMinimum: null,
-      membersMaximum: null
+      membersMaximum: null,
+      userCorrelationMap: null,
+      showUserCorrelationForm: false,
+      showUserCorrelation: true
     }
   },
   components: {
@@ -63,17 +72,16 @@ export default {
   mounted: function () {
     this.$log.info("CONTEXT : ", this.name + " : MOUNTED");
   },
+  watch: {
+    userCorrelationMap: function (newVal) {
+      if (newVal) {
+        this.allGuildsData = [...this.allGuildsData.concat(this.userCorrelationMap).reduce((m, o) => 
+          m.set(o.guildID, Object.assign(m.get(o.guildID) || {}, o))
+        , new Map()).values()];
+      }
+    }
+  },
   methods: {
-    hitServer: function (path) {
-      axios.get(`http://127.0.0.1:5000/` + path)
-        .then((response) => {
-          this.allGuildsData = response.data;
-        })
-        .catch((error) => {
-          this.$log.error("CONTEXT : " + this.name + " : ERROR :: " + error);
-          return error;
-        })
-    },
     showDetailsForGuild: function (id) {
       console.log("SHOW DETAILS FOR GUILD :: ", id)
       this.isDetailsPanelVisible = true;
@@ -139,9 +147,38 @@ export default {
         // unhide
       }
     },
+    showHideCompatibilityScores: function (showHide) {
+      this.showUserCorrelation = showHide;
+    },
+    turnOffCorrelationForm: function () {
+      this.showUserCorrelationForm = false;
+    },
+    getCorrelationForUser: function () {
+      this.showUserCorrelationForm = true;
+      this.hitServer('user-correlations')
+    },
     closeDetailPanel: function () {
       this.isDetailsPanelVisible = false;
       this.$refs.GuildsTable.sizeToFit();
+    },
+    storeAndSubmitUserCorrelation: function (results) {
+      console.log(results);
+    },
+    hitServer: function (path) {
+      axios.get(`http://127.0.0.1:5000/` + path)
+        .then((response) => {
+          if (response.data.AllGuilds) {
+            this.allGuildsData = response.data.AllGuilds;
+          } else if (response.data.UserCorrelation) {
+            this.userCorrelationMap = response.data.UserCorrelation;
+          }else {
+            console.log(response.data);
+          }
+        })
+        .catch((error) => {
+          this.$log.error("CONTEXT : " + this.name + " : ERROR :: " + error);
+          return error;
+        })
     }
   }
 }
@@ -149,11 +186,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-#app-logo {
-  margin-top: -50px;
-  width: 550px;
-}
-
 #grid-workspace {
   display: flex;
   width: 100%;
