@@ -120,6 +120,9 @@ export default {
   },
   mounted: function () {
     this.$log.info("CONTEXT : ", this.name + " : MOUNTED");
+    if (localStorage.surveyResults) {
+      this.userCorrelationFormCompleted = true;
+    }
   },
   watch: {
     race: function() {
@@ -207,6 +210,12 @@ export default {
 
 #cupid {
   transform: rotate(15deg);
+}
+
+#wifi {
+  padding: 6px;
+  margin-bottom: 2px;
+  filter: brightness(25%);
 }
 
 #user-survey-form-btn {

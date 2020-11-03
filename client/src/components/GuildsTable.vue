@@ -92,7 +92,7 @@ export default {
       var filterInstance = this.gridOptions.api.getFilterInstance(field);
       filterInstance.setModel(newVal);
       this.gridOptions.api.onFilterChanged();
-      console.log(this.gridOptions.api.getFilterModel());
+      this.$log.info(this.gridOptions.api.getFilterModel());
     },
     clearFilters() {
       this.gridOptions.api.setFilterModel(null);

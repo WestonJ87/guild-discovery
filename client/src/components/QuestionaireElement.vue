@@ -142,7 +142,6 @@ export default {
             // uncheck any currently checked radios for the row
             allRadioBtns.forEach(radio => radio.checked = false );
             e.target.checked = true;
-            //console.log(e, question, index);
 
             // update map of survey questions
             let found = this.surveyMap.findIndex(row => row.question == question);
@@ -152,7 +151,6 @@ export default {
                 this.surveyMap[found].weight = index;
             }
             // TODO: revise this in the future incase we want multiple surveyMaps
-            // console.log(this.surveyMap, [].concat(...this.currentQuestion.survey).length);
             if (this.surveyMap.length == [].concat(...this.currentQuestion.survey).length) {
                 this.questionPageCompleted('survey');
             }

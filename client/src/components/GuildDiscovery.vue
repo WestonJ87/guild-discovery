@@ -84,7 +84,7 @@ export default {
   },
   methods: {
     showDetailsForGuild: function (id) {
-      console.log("SHOW DETAILS FOR GUILD :: ", id)
+      this.$log.info("SHOW DETAILS FOR GUILD :: ", id)
       this.isDetailsPanelVisible = true;
       this.selectedGuild = this.allGuildsData.find(guild => guild.guildID == id) // Get Guild by ID and show details panel constructed from info.
     },
@@ -165,7 +165,7 @@ export default {
       this.$refs.GuildsTable.sizeToFit();
     },
     storeAndSubmitUserCorrelation: function (results) {
-      console.log(results);
+      localStorage.surveyResults = results;
     },
     hitServer: function (path) {
       axios.get(`http://127.0.0.1:5000/` + path)
@@ -175,7 +175,7 @@ export default {
           } else if (response.data.UserCorrelation) {
             this.userCorrelationMap = response.data.UserCorrelation;
           }else {
-            console.log(response.data);
+            this.$log.info(response.data);
           }
         })
         .catch((error) => {
