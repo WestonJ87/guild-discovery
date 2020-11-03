@@ -7,6 +7,7 @@
       @user-correlation-survey-complete="storeAndSubmitUserCorrelation"
       @close-correlation-form="turnOffCorrelationForm"
       @get-user-correlations="getCorrelationForUser"
+      @launch-user-survey="launchUserSurvey"
       @show-hide-single-member="showHideSingleMemberGuilds"
       @show-hide-guilds-wo-desc="showHideGuildsWithoutDescription"
       @hide-compatibility-scores="showHideCompatibilityScores"
@@ -153,8 +154,10 @@ export default {
     turnOffCorrelationForm: function () {
       this.showUserCorrelationForm = false;
     },
-    getCorrelationForUser: function () {
+    launchUserSurvey: function () {
       this.showUserCorrelationForm = true;
+    },
+    getCorrelationForUser: function () {
       this.hitServer('user-correlations')
     },
     closeDetailPanel: function () {

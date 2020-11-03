@@ -32,7 +32,7 @@ import QuestionionaireElement from './QuestionaireElement'
 
 export default {
     name: 'QuestionaireForm',
-    props: [ 'resetStep' ],
+    props: [ 'resetStep', 'userCorrelationFormCompleted' ],
     data () {
         return {
             name: 'QuestionaireForm',
@@ -54,6 +54,9 @@ export default {
     },
     watch: {
         resetStep: function () {
+            this.resetProgessionForm();
+        },
+        userCorrelationFormCompleted: function () {
             this.resetProgessionForm();
         }
     },

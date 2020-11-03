@@ -3,22 +3,23 @@
       <QuestionaireModal
           @user-correlation-survey-complete="userCorrelationSurveyComplete"
           @close-correlation-form="closeUserCorrelationForm"
+          :userCorrelationFormCompleted="userCorrelationFormCompleted"
           :showUserCorrelationForm="showUserCorrelationForm">
       </QuestionaireModal>
       <div class="level-right">
-        <div class="field" style="margin-bottom: -25px; margin-right: 250px;">
+        <div class="field" style="margin-bottom: -100px; margin-right: 250px;">
           <label style="margin-top:-5px;" class="checkbox is-size-7 is-pulled-left">
             <b style="font-size: 1.2em;">hide compatibility : </b>  
             <input v-model="hideCompatibility" type="checkbox">
           </label>
         </div>
-        <div class="field" style="margin-bottom: -25px;">
+        <div class="field" style="margin-bottom: -100px;">
           <label style="margin-top:-5px;" class="checkbox is-size-7 is-pulled-left">
             hide single member guilds :   
             <input v-model="hideSingleMemberGuilds" type="checkbox">
           </label>
         </div>
-        <div class="field" style="margin-bottom: -25px;">
+        <div class="field" style="margin-bottom: -100px;">
           <label disabled style="margin-top:-5px;" class="checkbox is-size-7 is-pulled-left">
             hide no description guilds :   
             <input disabled v-model="hideGuildsWithoutDescription" type="checkbox">
@@ -29,9 +30,24 @@
         <div class="level-left">
           <figure class="image is-text-centered">
             <img id="app-logo" src="@/images/fractured-logo.png"/>
-        </figure>
-          <div id="build-user-correlation-btn" class="field">
-            <a @click="getCorrelationsForUser" class="button is-danger">Find my Guild Match <img id="cupid" src="@/images/cupid.png"/></a>
+          </figure>
+        </div>
+      </div>
+      <div class="level">
+        <div class="level-left">
+          <div id="user-survey-form-btn" class="field">
+            <a @click="launchUserSurvey" 
+              :class="{'is-danger' : !userCorrelationFormCompleted}"
+              class="button"> {{ !userCorrelationFormCompleted ? 'Find my Guild Match' : 'Redo guild dating profile' }}
+              <img v-if="userCorrelationFormCompleted" id="cupid" src="@/images/cupid-black.png"/>
+              <img v-if="!userCorrelationFormCompleted" id="cupid" src="@/images/cupid-white.png"/>
+            </a>
+          </div>
+          <div id="generate-user-correlation-btn" class="field">
+            <a @click="getCorrelationsForUser" v-if="userCorrelationFormCompleted"
+              class="button"> Request Match(s)
+              <img v-if="userCorrelationFormCompleted" id="wifi" src="@/images/search-love.png"/>
+            </a>
           </div>
         </div>
         <div class="level-right">
@@ -94,7 +110,8 @@ export default {
       minimumTotalPoints: "",
       minimumAveragePoints: "",
       hideCompatibility: "",
-      hideSingleMemberGuilds: ""
+      hideSingleMemberGuilds: "",
+      userCorrelationFormCompleted: false
     }
   },
   props: [ 'isDetailsPanelVisible', 'showUserCorrelationForm'],
@@ -146,6 +163,12 @@ export default {
       closeUserCorrelationForm: function() {
         this.$emit('close-correlation-form');
       },
+      launchUserSurvey: function () {
+        if (this.userCorrelationFormCompleted) {
+          this.userCorrelationFormCompleted = false;
+        }
+        this.$emit('launch-user-survey');
+      },
       getCorrelationsForUser: function () {
         this.$emit('get-user-correlations', 'user-correlations');
       },
@@ -160,6 +183,7 @@ export default {
       },
       userCorrelationSurveyComplete: function (results) {
         this.$emit('user-correlation-survey-complete', results);
+        this.userCorrelationFormCompleted = true;
       }
   }
 }
@@ -167,22 +191,31 @@ export default {
 
 <style scoped lang="scss">
 #app-logo {
+  margin-left: 20px;
   margin-top: -50px;
-  margin-bottom: 25px;
   width: 550px;
+  margin-bottom: -100px;
 }
 
-#cupid {
+#wifi, #cupid {
   padding: 5px;
   margin-top: 5px;
   margin-left: 10px;
   margin-right: -15px;
   max-height: 45px;
+}
+
+#cupid {
   transform: rotate(15deg);
 }
 
-#build-user-correlation-btn {
-  margin-top: -50px;
+#user-survey-form-btn {
+  margin-left: 15px;
+  margin-bottom: -40px;
+}
+
+#generate-user-correlation-btn {
+  margin-bottom: -40px;
 }
 
 .small-input {

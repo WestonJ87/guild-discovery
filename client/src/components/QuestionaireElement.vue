@@ -176,6 +176,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
+#selected-question {
+    margin-top: -100px;
+}
+
 .text-area-field, .simple-text-field, .simple-select-field {
     margin: 0 auto;
     padding-right: 150px;
@@ -202,7 +206,7 @@ th {
 }
 
 .surveystyle {
-    max-height: 475px;
+    max-height: 375px;
     overflow: scroll;
 }
 
