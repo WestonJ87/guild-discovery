@@ -1,17 +1,13 @@
 version: "3"
 
 services:
-  nginx:
-    image: nginx
-    ports:
-      - '80:80'
   client:
     container_name: guild-discovery-client
     build: 
       context: ../client
       dockerfile: Dockerfile
     ports:
-      - '5500:80'
+      - '80:80'
     depends_on:
       - server
   server:
