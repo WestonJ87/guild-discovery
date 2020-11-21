@@ -1,7 +1,7 @@
 #!/bin/bash
 export FLASK_APP=./guild-discovery/index.py
 
-if [[ $1 == rebuildDatabase ]]; then
+if [[ $REBUILD_DATABASE == true ]]; then
     flask refreshguilds
     echo "rebuilding database"
 else
