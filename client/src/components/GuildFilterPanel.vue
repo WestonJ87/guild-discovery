@@ -24,9 +24,9 @@
       </QuestionaireModal>
       <div class="level-right" style="margin-top: -60px;">
         <div class="field" style="margin-bottom: -100px; margin-right: 250px;">
-          <label style="margin-top:-5px;" class="checkbox is-size-7 is-pulled-left">
+          <label disabled style="margin-top:-5px;" class="checkbox is-size-7 is-pulled-left">
             <b style="font-size: 1.2em;">hide compatibility : </b>  
-            <input v-model="hideCompatibility" type="checkbox">
+            <input disabled v-model="hideCompatibility" type="checkbox">
           </label>
         </div>
         <div class="field" style="margin-bottom: -100px;">
@@ -217,7 +217,7 @@ export default {
   width: 350px;
   height: 400px;
   background-repeat: no-repeat;
-  background-size: 325px 300px;
+  background-size: 300px 300px;
   background-image: url("../images/match-genius-tab-disabled.png");
   text-align: center;
   transform: translateY(-200px);
