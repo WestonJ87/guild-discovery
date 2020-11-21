@@ -1,6 +1,10 @@
 version: "3"
 
 services:
+  nginx:
+    image: nginx
+    ports:
+      - '80:80'
   client:
     container_name: guild-discovery-client
     build: 
@@ -16,7 +20,7 @@ services:
       context: ../py
       dockerfile: Dockerfile
     environment:
-      - REBUILD_DATABASE=true
+      - REBUILD_DATABASE=false
     ports:
       - '5000:5000'
     depends_on:
