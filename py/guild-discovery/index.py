@@ -2,23 +2,24 @@ from app import app
 
 from database.db import initialize_db
 
-import time
-import http
-import scraper
-import mongostore
-import requests
+import time, http, scraper, mongostore, requests
 
 from mongoengine import *
-connect('guild-discovery', 'localhost:27017')
 
 app.config['MONGODB_SETTINGS'] = {
-    'host': 'mongodb://localhost/'
+    'name': 'guild-discovery',
+    'host': 'mongo',
+    'port': 27017
 }
+
+# connect('')
+
+port = 5000
 
 initialize_db(app)
 
 if __name__ == "__main__":
-    app.run(host='127.0.0.1', port=5001)
+    app.run(host='0.0.0.0', port=port)
 
 @app.cli.command()
 def refreshGuilds():

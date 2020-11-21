@@ -1,12 +1,28 @@
 <template>
     <div id="filter-bar">
+      <div id="genius-tab">
+        <div id="user-survey-form-btn" class="field">
+            <a @click="launchUserSurvey" 
+              :class="{'is-danger' : !userCorrelationFormCompleted}"
+              class="button"> {{ !userCorrelationFormCompleted ? 'Find my Guild Match' : 'Redo guild dating profile' }}
+              <img v-if="userCorrelationFormCompleted" id="cupid" src="@/images/cupid-black.png"/>
+              <img v-if="!userCorrelationFormCompleted" id="cupid" src="@/images/cupid-white.png"/>
+            </a>
+        </div>
+        <div id="generate-user-correlation-btn" class="field">
+          <a @click="getCorrelationsForUser" v-if="userCorrelationFormCompleted"
+            class="button"> Request Match(s)
+            <img v-if="userCorrelationFormCompleted" id="wifi" src="@/images/search-love.png"/>
+          </a>
+        </div>
+      </div>
       <QuestionaireModal
           @user-correlation-survey-complete="userCorrelationSurveyComplete"
           @close-correlation-form="closeUserCorrelationForm"
           :userCorrelationFormCompleted="userCorrelationFormCompleted"
           :showUserCorrelationForm="showUserCorrelationForm">
       </QuestionaireModal>
-      <div class="level-right">
+      <div class="level-right" style="margin-top: -60px;">
         <div class="field" style="margin-bottom: -100px; margin-right: 250px;">
           <label style="margin-top:-5px;" class="checkbox is-size-7 is-pulled-left">
             <b style="font-size: 1.2em;">hide compatibility : </b>  
@@ -35,20 +51,6 @@
       </div>
       <div class="level">
         <div class="level-left">
-          <div id="user-survey-form-btn" class="field">
-            <a @click="launchUserSurvey" 
-              :class="{'is-danger' : !userCorrelationFormCompleted}"
-              class="button"> {{ !userCorrelationFormCompleted ? 'Find my Guild Match' : 'Redo guild dating profile' }}
-              <img v-if="userCorrelationFormCompleted" id="cupid" src="@/images/cupid-black.png"/>
-              <img v-if="!userCorrelationFormCompleted" id="cupid" src="@/images/cupid-white.png"/>
-            </a>
-          </div>
-          <div id="generate-user-correlation-btn" class="field">
-            <a @click="getCorrelationsForUser" v-if="userCorrelationFormCompleted"
-              class="button"> Request Match(s)
-              <img v-if="userCorrelationFormCompleted" id="wifi" src="@/images/search-love.png"/>
-            </a>
-          </div>
         </div>
         <div class="level-right">
           <div class="field" style="margin-top:5px;">
@@ -111,6 +113,7 @@ export default {
       minimumAveragePoints: "",
       hideCompatibility: "",
       hideSingleMemberGuilds: "",
+      hideGuildsWithoutDescription: "",
       userCorrelationFormCompleted: false
     }
   },
@@ -195,9 +198,8 @@ export default {
 <style scoped lang="scss">
 #app-logo {
   margin-left: 20px;
-  margin-top: -50px;
   width: 550px;
-  margin-bottom: -100px;
+  margin-bottom: -200px;
 }
 
 #wifi, #cupid {
@@ -208,8 +210,44 @@ export default {
   max-height: 45px;
 }
 
+#genius-tab {
+  position: absolute;
+  top: 0;
+  left: 40%;
+  width: 350px;
+  height: 400px;
+  background-repeat: no-repeat;
+  background-size: 325px 300px;
+  background-image: url("../images/match-genius-tab-disabled.png");
+  text-align: center;
+  transform: translateY(-200px);
+  z-index: 100;
+}
+
+// #genius-tab:hover {
+//   animation-name: show-genius-tab;
+//   animation-duration: 0.35s;
+//   animation-timing-function: linear;
+//   animation-fill-mode: forwards;
+// }
+
+@keyframes show-genius-tab {
+  from {
+    transform: translateY(-200px);
+  }
+  to {
+    transform: translateY(0px);
+  }
+}
+
+#genius-tab a {
+  margin: 0 auto;
+}
+
 #cupid {
   transform: rotate(15deg);
+  padding: 5px;
+  margin-left: -3px;
 }
 
 #wifi {
@@ -218,13 +256,17 @@ export default {
   filter: brightness(25%);
 }
 
+#user-survey-form-btn, #generate-user-correlation-btn  {
+  max-width: 260px;
+  margin-left: 35px;
+}
+
 #user-survey-form-btn {
-  margin-left: 30px;
-  margin-bottom: -40px;
+  margin-top: 5px;
 }
 
 #generate-user-correlation-btn {
-  margin-bottom: -40px;
+  margin-top: -25px;
 }
 
 .small-input {

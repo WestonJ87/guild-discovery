@@ -142,7 +142,8 @@ export default {
        if (showHide) {
         this.descriptionFilterObject = {
           filterType: 'text',
-          type: 'blanks'
+          type: 'empty',
+          includeBlanksInEquals: false
         }
       } else {
         // unhide

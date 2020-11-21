@@ -1,1 +1,1 @@
-FLASK_APP=guild-discovery.py
+FLASK_APP=index.py

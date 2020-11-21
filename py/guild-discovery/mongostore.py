@@ -10,11 +10,12 @@ def updateOrCreateGuild(guildJSON):
     result = Guilds.objects(guildID=jsonDecoded['Id'])
     if len(result) == 0:
         newGuild = createGuild(jsonDecoded)
-        pprint(newGuild)
         newGuild.save()
     else:
-        pass
         # update guild
+        updateGuild = createGuild(jsonDecoded)
+        Guilds.objects(guildID=jsonDecoded['Id']).delete()
+        updateGuild.save()
 
 def createGuild(jsonDecoded):
     # pprint(json.loads(json_data)['AveragePoints'])

@@ -48,7 +48,6 @@ export default {
     },
     userCorrelationMap: function(newVal) {
       this.$emit('show-user-correlation', true);
-      this.updateColumnDefs(this.showUserCorrelation);
     },
     raceFilterObject: function(newVal) {
       this.updateFilter('race', newVal);
@@ -64,11 +63,15 @@ export default {
     },
     showUserCorrelation: function(shouldShow) {
       if (shouldShow) {
+        this.updateColumnDefs(shouldShow);
         this.gridOptions.rowHeight = 120;
         this.gridOptions.api.resetRowHeights();
+        this.sizeToFit()
       } else {
+        this.updateColumnDefs(shouldShow);
         this.gridOptions.rowHeight = 60;
         this.gridOptions.api.resetRowHeights();
+        this.sizeToFit();
       }
     }
   },
@@ -203,7 +206,8 @@ export default {
         { 
           headerName: 'Description',
           width: 450,
-          field: 'description', 
+          field: 'description',
+          filter: 'agTextColumnFilter', 
           sortable: true
         }
       ];
