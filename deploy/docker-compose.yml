@@ -16,7 +16,7 @@ services:
       context: ../py
       dockerfile: Dockerfile
     environment:
-      - REBUILD_DATABASE=false
+      - REBUILD_DATABASE=true
     ports:
       - '5000:5000'
     depends_on:
