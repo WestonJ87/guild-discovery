@@ -8,4 +8,4 @@ else
     echo "no rebuild requested"
 fi
 
-flask run --host=0.0.0.0
+flask run
