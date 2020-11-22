@@ -169,7 +169,7 @@ export default {
       localStorage.surveyResults = results;
     },
     hitServer: function (path) {
-      axios.get(`http://localhost:5000/` + path)
+      axios.get(`http://127.0.0.1:5000/api/` + path)
         .then((response) => {
           if (response.data.AllGuilds) {
             this.allGuildsData = response.data.AllGuilds;

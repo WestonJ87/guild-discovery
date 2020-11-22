@@ -18,17 +18,12 @@ def beforeReady():
      data.userSessionInfo = {}
      data.allGuilds = Guilds.objects
 
-@app.route('/')
-@cross_origin()
-def getIndex():
-    return jsonify(success=True), 200
-
-@app.route('/guilds')
+@app.route('/api/guilds')
 @cross_origin()
 def getGuilds():
     return jsonify({'AllGuilds': data.allGuilds}), 200
 
-@app.route('/store-user-preferences')
+@app.route('/api/store-user-preferences')
 @cross_origin()
 def storePreferencesForUser(sessionInfo):
     # TODO: eventually it might be nice to implement user login...
@@ -36,7 +31,7 @@ def storePreferencesForUser(sessionInfo):
     data.userSessionInfo = sessionInfo
     return jsonify(success=True), 200
 
-@app.route('/user-correlations')
+@app.route('/api/user-correlations')
 @cross_origin()
 def getCorrelationsForUser():
     return jsonify({'UserCorrelation': matchmaker.getCorrelationsForUser(data.allGuilds, data.userSessionInfo)}), 200
