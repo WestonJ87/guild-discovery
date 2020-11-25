@@ -18,6 +18,11 @@ def beforeReady():
      data.userSessionInfo = {}
      data.allGuilds = Guilds.objects
 
+@app.route('/api/')
+@cross_origin()
+def getIndex():
+    return jsonify({ message: "success" }), 200
+
 @app.route('/api/guilds')
 @cross_origin()
 def getGuilds():
