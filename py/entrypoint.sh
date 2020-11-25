@@ -8,4 +8,4 @@ else
     echo "no rebuild requested"
 fi
 
-flask run
+python FLASK_APP
