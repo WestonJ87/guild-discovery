@@ -6,6 +6,8 @@ COPY . .
 ARG REBUILD_DATABASE
 ENV REBUILD_DATABASE=$REBUILD_DATABASE
 
+ENV FLASK_APP=./guild-discovery/index.py
+
 RUN pip3 install -r ./guild-discovery/requirements.txt
 EXPOSE 5000
 
