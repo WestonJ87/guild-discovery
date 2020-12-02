@@ -51,7 +51,7 @@ export default {
   data () {
     return {
       name: 'GuildDiscovery',
-      baseURL: 'http://localhost:5000',
+      baseURL: 'http://ec2-54-160-106-66.compute-1.amazonaws.com:5000',
       isDetailsPanelVisible: false,
       allGuildsData: null,
       raceFilterObject: null,
