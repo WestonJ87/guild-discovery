@@ -17,6 +17,7 @@ def beforeReady():
      data = SessionStorage()
      data.userSessionInfo = {}
      data.allGuilds = Guilds.objects
+     pprint(data.allGuilds)
 
 @app.route('/api/')
 @cross_origin()
