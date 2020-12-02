@@ -21,7 +21,7 @@ def beforeReady():
 @app.route('/api/')
 @cross_origin()
 def getIndex():
-    return jsonify({ message: "success" }), 200
+    return jsonify(success=True), 200
 
 @app.route('/api/guilds')
 @cross_origin()
