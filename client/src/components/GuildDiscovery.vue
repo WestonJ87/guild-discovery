@@ -51,6 +51,7 @@ export default {
   data () {
     return {
       name: 'GuildDiscovery',
+      baseURL: 'http://localhost:5000',
       isDetailsPanelVisible: false,
       allGuildsData: null,
       raceFilterObject: null,
@@ -169,7 +170,7 @@ export default {
       localStorage.surveyResults = results;
     },
     hitServer: function (path) {
-      axios.get(`https://localhost:5000/api/` + path)
+      axios.get(this.baseURL + `/api/` + path)
         .then((response) => {
           if (response.data.AllGuilds) {
             this.allGuildsData = response.data.AllGuilds;
