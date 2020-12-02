@@ -2,7 +2,7 @@ from flask_cors import cross_origin
 from flask import jsonify
 
 from app import app
-import time, scraper, matchmaker, subprocess, sys, os, pprint
+import time, scraper, matchmaker, subprocess, sys, os
 
 from database.models import Guilds
 
@@ -17,7 +17,6 @@ def beforeReady():
      data = SessionStorage()
      data.userSessionInfo = {}
      data.allGuilds = Guilds.objects
-     pprint(data.allGuilds)
 
 @app.route('/api/')
 @cross_origin()
