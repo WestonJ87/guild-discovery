@@ -2,7 +2,7 @@ from flask_cors import cross_origin
 from flask import jsonify
 
 from app import app
-import time, scraper, matchmaker, subprocess, sys, os
+import time, scraper, matchmaker, subprocess, sys, os, pprint
 
 from database.models import Guilds
 
