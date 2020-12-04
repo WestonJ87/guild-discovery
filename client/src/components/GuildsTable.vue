@@ -1,5 +1,5 @@
 <template>
-    <AgGridVue style="height: 750px;"
+    <AgGridVue
         :class="isDetailsPanelVisible ? 'minimized' : 'full-display'" class="ag-theme-alpine"
         :columnDefs="columnDefs"
         :rowData="rowData"
@@ -219,10 +219,10 @@ export default {
 <style scoped lang="scss">
   // Math.floor(Math.random() * 100) + 1
   .minimized {
-    width: 70%;
+    width: 70vw;
   }
 
   .full-display {
-    width: 100%
+    width: 100vw;
   }
 </style>

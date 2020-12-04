@@ -1,5 +1,5 @@
 <template>
-    <div id="filter-bar">
+    <div id="filter-bar" class="has-text-white">
       <div id="genius-tab">
         <div id="user-survey-form-btn" class="field">
             <a @click="launchUserSurvey" 
@@ -25,7 +25,7 @@
       <div class="level-right" style="margin-top: -60px;">
         <div class="field" style="margin-bottom: -100px; margin-right: 250px;">
           <label disabled style="margin-top:-5px;" class="checkbox is-size-7 is-pulled-left">
-            <b style="font-size: 1.2em;">hide compatibility : </b>  
+            <b style="font-size: 1.2em; color: #ccc!important;">hide compatibility : </b>  
             <input disabled v-model="hideCompatibility" type="checkbox">
           </label>
         </div>
@@ -36,7 +36,7 @@
           </label>
         </div>
         <div class="field" style="margin-bottom: -100px;">
-          <label disabled style="margin-top:-5px;" class="checkbox is-size-7 is-pulled-left">
+          <label disabled style="margin-top:-5px; color: #ccc!important;" class="checkbox is-size-7 is-pulled-left">
             hide no description guilds :   
             <input disabled v-model="hideGuildsWithoutDescription" type="checkbox">
           </label>
@@ -196,6 +196,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
+#filter-bar {
+  margin-bottom: 20px;
+}
+
 #app-logo {
   margin-left: 20px;
   width: 550px;
@@ -214,8 +218,8 @@ export default {
   position: absolute;
   top: 0;
   left: 40%;
-  width: 350px;
-  height: 400px;
+  width: 285px;
+  height: 285px;
   background-repeat: no-repeat;
   background-size: 300px 300px;
   background-image: url("../images/match-genius-tab-disabled.png");
@@ -226,7 +230,7 @@ export default {
 
 // #genius-tab:hover {
 //   animation-name: show-genius-tab;
-//   animation-duration: 0.35s;
+//   animation-duration: 0.1s;
 //   animation-timing-function: linear;
 //   animation-fill-mode: forwards;
 // }
@@ -258,7 +262,7 @@ export default {
 
 #user-survey-form-btn, #generate-user-correlation-btn  {
   max-width: 260px;
-  margin-left: 35px;
+  margin-left: 22px;
 }
 
 #user-survey-form-btn {
@@ -284,5 +288,9 @@ export default {
 }
 .field {
   padding: 10px;
+}
+
+.label {
+  color: #fff!important;
 }
 </style>

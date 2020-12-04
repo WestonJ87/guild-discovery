@@ -4,17 +4,17 @@ services:
   client:
     container_name: guild-discovery-client
     build: 
-      context: ../client
+      context: ./client
       dockerfile: Dockerfile
     ports:
       - '80:80'
   server:
     container_name: guild-discovery-server
     build: 
-      context: ../py
+      context: ./py
       dockerfile: Dockerfile
     environment:
-      - REBUILD_DATABASE=false
+      - REBUILD_DATABASE=true
     ports:
       - '5000:5000'
     depends_on:

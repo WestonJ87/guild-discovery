@@ -1,5 +1,8 @@
 <template>
-  <div>
+  <div id="discovery-workspace" 
+    v-bind:style="{ 
+      backgroundImage: 'url(https://assets.fracturedmmo.com/images/universe_feature_' + raceImageIndex + '.jpg)' 
+      }">
     <GuildFilterPanel
       @filter-by-race="filterByRace"
       @filter-by-participants="filterByMembers"
@@ -17,6 +20,7 @@
     </GuildFilterPanel>
     <div id="grid-workspace">
       <GuildsTable
+        id="grid-table"
         ref="GuildsTable"
         @hit-server="hitServer"
         @launch-guild-details="showDetailsForGuild"
@@ -31,6 +35,7 @@
         :isDetailsPanelVisible="isDetailsPanelVisible">
       </GuildsTable>
       <GuildDetailsPanel v-if="isDetailsPanelVisible"
+        id="guild-detail-panel"
         @close-details-panel="closeDetailPanel"
         :selectedGuild="selectedGuild">
       </GuildDetailsPanel>
@@ -44,7 +49,7 @@ import GuildDetailsPanel from './GuildDetailsPanel'
 import GuildsTable from './GuildsTable'
 
 import axios from 'axios';
-import _ from 'lodash'
+import _ from 'lodash';
 
 export default {
   name: 'GuildDiscovery',
@@ -63,7 +68,8 @@ export default {
       membersMaximum: null,
       userCorrelationMap: null,
       showUserCorrelationForm: false,
-      showUserCorrelation: true
+      showUserCorrelation: true,
+      raceImageIndex: '01'
     }
   },
   components: {
@@ -92,7 +98,24 @@ export default {
     resetFilters: function () {
       this.$refs.GuildsTable.clearFilters();
     },
+    updateRaceBackgroundImageIndex: function (race) {
+      switch(race) {
+        case "":
+          this.raceImageIndex = '01';
+          break;
+        case "Human":
+          this.raceImageIndex = '02';
+          break;
+        case "Beastman":
+          this.raceImageIndex = '03';
+          break;
+        case "Demon":
+          this.raceImageIndex = '04';
+          break;
+      }
+    },
     filterByRace: function (race) {
+      this.updateRaceBackgroundImageIndex(race);
       this.raceFilterObject = {
         filterType: 'text',
         type: 'Equals',
@@ -191,9 +214,35 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+#discovery-workspace {
+  background-position: 0% -30%;
+  background-repeat: repeat-y;
+  webkit-transition: background-image 0.5s ease-in-out;
+  transition: background-image 0.5s ease-in-out;
+}
+
 #grid-workspace {
   display: flex;
   width: 100%;
+  max-height: 105vh;
+}
+
+#grid-table {
+  height: 83vh;
+}
+
+#guild-detail-panel {
+  margin-left: 1vw;
+  width: 27vw;
+  max-height: 84vh;
+  overflow: scroll;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+  margin-bottom: 50px;
+}
+
+#guild-detail-panel::-webkit-scrollbar {
+  display: none;
 }
 
 .is-text-centered {

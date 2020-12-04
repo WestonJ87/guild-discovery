@@ -1,5 +1,5 @@
 <template>
-  <div id="guild-details">
+  <div>
     <article class="message">
       <div class="guild-details-header message-header">
         Guild Details - {{ selectedGuild.name }}
@@ -38,7 +38,7 @@
             </span>
           </div>
         </div>
-        <div v-if="selectedGuild.description" class="container">
+        <div v-if="selectedGuild.description" class="container guild-description">
           <section class="section">
             <div class="container">
               <label class="label is-small">description :</label>
@@ -92,9 +92,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
-#guild-details {
-  width: 30%;
-  padding: 10px;
+.guild-description {
+  padding: 15px;
 }
 
 .section {
