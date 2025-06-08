@@ -1,13 +1,28 @@
 from bs4 import BeautifulSoup as bs 
-import requests   # importing requests module to open a URL
+import cloudscraper
 import re
 import json
 from pprint import pprint
+import time
+import random
 
 from concurrent.futures import ThreadPoolExecutor
 from concurrent.futures import as_completed
 
-MAX_THREADS = 25
+MAX_THREADS = 5
+
+# The user will need to populate this list with their own proxies
+# Example format: 'http://user:pass@host:port' or 'http://host:port'
+PROXIES = [
+    'http://190.61.88.147:8080',      # Argentina
+    'http://181.129.202.169:8080',    # Paraguay
+    'http://138.99.93.42:8080',       # Brazil
+    'http://167.250.22.148:8080',     # Brazil
+    'http://200.105.215.18:3128',     # Colombia
+]
+
+# Create a single, reusable scraper instance
+scraper = cloudscraper.create_scraper()
 
 def checkForUpdateGuilds(numberOfIDs, iterator):
     fracturedGuildsURL = 'https://fracturedmmo.com/guild-profile/id/{}'
@@ -16,9 +31,15 @@ def checkForUpdateGuilds(numberOfIDs, iterator):
     with ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
         futures = [ executor.submit(fetchAndCollect, fracturedGuildsURL.format(id + ( iterator * numberOfIDs )), id + ( iterator * numberOfIDs )) for id in range(numberOfIDs) ]
     
-        for result in as_completed(futures):
-            if result.result() != None:
-                allGuilds.append(result.result())
+        for future in as_completed(futures):
+            try:
+                result = future.result()
+                if result is not None:
+                    allGuilds.append(result)
+            except cloudscraper.exceptions.CloudflareChallengeError as e:
+                print(f"Cloudflare challenge failed for a guild, skipping. Error: {e}")
+            except Exception as e:
+                print(f"An unexpected error occurred for a guild, skipping. Error: {e}")
 
     return allGuilds
 
@@ -27,7 +48,14 @@ def getGuildPage(id):
     return fetchAndCollect(fracturedGuildsURL.format(id), id);
 
 def fetchAndCollect(url, id):
-    return collectGuildPageData(requests.get(url).text, id)
+    time.sleep(random.uniform(1.0, 2.5)) # Keep the polite delay
+
+    proxy_config = None
+    if PROXIES:
+        proxy_url = random.choice(PROXIES)
+        proxy_config = { 'http': proxy_url, 'https': proxy_url }
+
+    return collectGuildPageData(scraper.get(url, proxies=proxy_config, timeout=15).text, id)
 
 def collectGuildPageData(pageopen, id):
     soup = bs(pageopen,'html.parser')
@@ -38,6 +66,10 @@ def collectGuildPageData(pageopen, id):
     # find a predictible section to scope our search to
     profileSection = soup.find(id="profile_displayer")
     
+    if not profileSection:
+        print(f"Could not find 'profile_displayer' for guild ID {id}. Page structure may have changed.")
+        return None
+
     sectionHeaders = profileSection.findAll(['h1', 'h2', 'h3', 'h4'])
 
     # if this value equals guildName we have encountered re-direction to default 'Create Guild' page
