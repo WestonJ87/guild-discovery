@@ -3,24 +3,24 @@ version: "3"
 services:
   client:
     container_name: guild-discovery-client
-    build: 
+    build:
       context: ./client
       dockerfile: Dockerfile
     ports:
-      - '80:80'
+      - "8080:80"
   server:
     container_name: guild-discovery-server
-    build: 
+    build:
       context: ./py
       dockerfile: Dockerfile
     environment:
-      - REBUILD_DATABASE=true
+      - REBUILD_DATABASE=false
     ports:
-      - '5000:5000'
+      - "5000:5000"
     depends_on:
       - mongo
   mongo:
     container_name: mongo
     image: mongo:latest
     ports:
-      - '27017:27017'
+      - "27017:27017"
