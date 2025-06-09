@@ -32,7 +32,7 @@
         <div class="field" style="margin-bottom: -100px;">
           <label style="margin-top:-5px;" class="checkbox is-size-7 is-pulled-left">
             hide single member guilds :   
-            <input v-model="hideSingleMemberGuilds" type="checkbox">
+            <input v-model="hideSingleMemberGuilds" type="checkbox" data-testid="hide-single-member-guilds-checkbox">
           </label>
         </div>
         <div class="field" style="margin-bottom: -100px;">
